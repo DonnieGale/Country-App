@@ -5,9 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,8 @@ import android.view.ViewGroup;
  */
 public class QuizSwipe extends Fragment {
 
+
+    private ViewPager2 viewPager;
 
     public QuizSwipe() {
         // Required empty public constructor
@@ -32,12 +33,6 @@ public class QuizSwipe extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -46,24 +41,31 @@ public class QuizSwipe extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
-        super.onViewCreated( view, savedInstanceState );
+        super.onViewCreated(view, savedInstanceState);
 
-        ViewPager viewPager = view.findViewById( R.id.ViewPager );
-        ViewPager2.OnPageChangeCallback onPageChangeListener = new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
+        viewPager = view.findViewById(R.id.ViewPager);
 
-            }
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Fragment quiz = new quizFragment();
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                manager.beginTransaction().replace( R.id.ViewPager, quiz ).commit();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        };
+        QuizPagerAdapter adapter = new QuizPagerAdapter(this);
+        viewPager.setAdapter(adapter);
     }
+
+        // Adapter class to manage the fragments for each swipe position
+        private static class QuizPagerAdapter extends FragmentStateAdapter {
+            public QuizPagerAdapter(@NonNull Fragment fragment) {
+                super(fragment);
+            }
+
+            @NonNull
+            @Override
+            public Fragment createFragment(int position) {
+                // Create a new instance of the fragment and pass the question index
+                return quizFragment.newInstance(position);
+            }
+
+            @Override
+            public int getItemCount() {
+                return 6; // Total number of quiz questions
+            }
+        }
+
 }
