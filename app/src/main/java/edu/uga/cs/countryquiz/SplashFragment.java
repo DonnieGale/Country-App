@@ -46,8 +46,10 @@ public class SplashFragment extends Fragment {
 
 
         start.setOnClickListener( v -> {
+            Fragment quizSwipe = new QuizSwipe();
             Fragment quiz = new quizFragment();
             FragmentManager manager = getActivity().getSupportFragmentManager();
+            manager.beginTransaction().replace( R.id.fragmentContainerView2, quizSwipe ).commit();
             manager.beginTransaction().replace( R.id.fragmentContainerView2, quiz ).commit();
         });
 

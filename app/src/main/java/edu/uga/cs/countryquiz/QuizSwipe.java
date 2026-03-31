@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,13 +48,22 @@ public class QuizSwipe extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
         super.onViewCreated( view, savedInstanceState );
 
+        ViewPager viewPager = view.findViewById( R.id.ViewPager );
+        ViewPager2.OnPageChangeCallback onPageChangeListener = new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
 
+            }
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Fragment quiz = new quizFragment();
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                manager.beginTransaction().replace( R.id.ViewPager, quiz ).commit();
+            }
 
-
-        //start.setOnClickListener( v -> {
-        //    Fragment quiz = new quiz();
-        //    FragmentManager manager = getActivity().getSupportFragmentManager();
-        //    manager.beginTransaction().replace( R.id.main, quiz ).commit();
-        //});
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        };
     }
 }
