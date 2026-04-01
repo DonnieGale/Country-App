@@ -59,21 +59,48 @@ public class quizFragment extends Fragment {
 
         int position = getArguments() != null ? getArguments().getInt("position") : 0;
 
+        QuizViewModel viewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
+
         TextView questionTextView = v.findViewById(R.id.textView3);
+        RadioGroup radioGroup = v.findViewById(R.id.RadioGroup1);
         RadioButton rb1 = v.findViewById(R.id.radioButton2);
         RadioButton rb2 = v.findViewById(R.id.radioButton3);
         RadioButton rb3 = v.findViewById(R.id.radioButton4);
 
         CountryQuizData countryQuizData = new CountryQuizData(getContext());
         countryQuizData.open();
-
         countryList = countryQuizData.retrieveAllCountries();
-        countryQuizData.close();
 
-        Country country = countryList.get(position % countryList.size());
+        if (countryList != null && !countryList.isEmpty()) {
+            Country country = countryList.get(position % countryList.size());
+            questionTextView.setText("Which continent is " + country.getCountryName() + " in?");
+
+            String correct = country.getContinentName();
+
+            rb1.setText(correct);
+            rb2.setText("Europe");
+            rb3.setText("Asia");
+
+            //RESTORE SAVED ANSWER (If user swipes back)
+            String savedAnswer = viewModel.getAnswer(position);
+            if (savedAnswer != null) {
+                if (rb1.getText().equals(savedAnswer)) rb1.setChecked(true);
+                else if (rb2.getText().equals(savedAnswer)) rb2.setChecked(true);
+                else if (rb3.getText().equals(savedAnswer)) rb3.setChecked(true);
+            }
+
+            //SAVE ANSWER ON CLICK
+            radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                RadioButton selected = v.findViewById(checkedId);
+                if (selected != null) {
+                    viewModel.setAnswer(position, selected.getText().toString());
+                    Log.d(TAG, "Saved answer for position " + position + ": " + selected.getText());
+                }
+            });
+        }
 
 
-        questionTextView.setText("Which continent is " + country.getCountryName() + " in?");
+
 
 
     }

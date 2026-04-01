@@ -42,15 +42,15 @@ public class QuizSwipe extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
+        QuizPagerAdapter quizPagerAdapter = new QuizPagerAdapter(this);
 
         viewPager = view.findViewById(R.id.ViewPager);
-        viewPager.setAdapter(viewPagerAdapter);
+        viewPager.setAdapter(quizPagerAdapter);
 
     }
 
-    public class ViewPagerAdapter extends FragmentStateAdapter {
-        public ViewPagerAdapter(@NonNull Fragment fragment) {
+    public class QuizPagerAdapter extends FragmentStateAdapter {
+        public QuizPagerAdapter(@NonNull Fragment fragment) {
             super(fragment);
         }
 
@@ -62,7 +62,7 @@ public class QuizSwipe extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 3;
+            return 6;
         }
     }
 
