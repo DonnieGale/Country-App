@@ -47,16 +47,20 @@ public class SplashFragment extends Fragment {
 
         start.setOnClickListener( v -> {
             Fragment quizSwipe = new QuizSwipe();
-            Fragment quiz = new quizFragment();
             FragmentManager manager = getActivity().getSupportFragmentManager();
-            manager.beginTransaction().replace( R.id.fragmentContainerView2, quizSwipe ).commit();
-            manager.beginTransaction().replace( R.id.fragmentContainerView2, quiz ).commit();
+            manager.beginTransaction()
+                    .replace( R.id.fragmentContainerView2, quizSwipe )
+                    .addToBackStack(null)
+                    .commit();
         });
 
         previous.setOnClickListener( v -> {
             Fragment prevQuiz = new PreviousQuizFragment();
             FragmentManager manager = getActivity().getSupportFragmentManager();
-            manager.beginTransaction().replace( R.id.fragmentContainerView2, prevQuiz ).commit();
+            manager.beginTransaction()
+                    .replace( R.id.fragmentContainerView2, prevQuiz )
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 }

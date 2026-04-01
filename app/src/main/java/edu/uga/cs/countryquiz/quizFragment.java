@@ -3,13 +3,20 @@ package edu.uga.cs.countryquiz;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,13 +25,13 @@ import android.widget.RadioGroup;
  */
 public class quizFragment extends Fragment {
 
-    int questionIndex;
-    RadioGroup radioGroup;
+    private static final String TAG = "quizFragment";
+    private List<Country> countryList;
+
 
     public quizFragment() {
         // Required empty public constructor
     }
-
 
     public static quizFragment newInstance(int position) {
         quizFragment fragment = new quizFragment();
@@ -37,38 +44,40 @@ public class quizFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            questionIndex = getArguments().getInt("position");
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_quiz2, container, false);
-        radioGroup = v.findViewById(R.id.RadioGroup1);
 
-        // 1. Change text based on questionIndex
-        updateQuestionUI(v, questionIndex);
-
-        // 2. Save answer when a radio button is clicked
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            RadioButton selected = v.findViewById(checkedId);
-            String answer = selected.getText().toString();
-            saveAnswerToActivity(answer);
-        });
-
-        return v;
+        return inflater.inflate(R.layout.fragment_quiz2, container, false);
     }
 
-    private void updateQuestionUI(View v, int index) {
-        // Logic to fetch question 'index' from your DB or List
-        // Example: textView.setText(quizList.get(index).getQuestion());
+    @Override
+    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(v, savedInstanceState);
+
+        int position = getArguments() != null ? getArguments().getInt("position") : 0;
+
+        TextView questionTextView = v.findViewById(R.id.textView3);
+        RadioButton rb1 = v.findViewById(R.id.radioButton2);
+        RadioButton rb2 = v.findViewById(R.id.radioButton3);
+        RadioButton rb3 = v.findViewById(R.id.radioButton4);
+
+        CountryQuizData countryQuizData = new CountryQuizData(getContext());
+        countryQuizData.open();
+
+        countryList = countryQuizData.retrieveAllCountries();
+        countryQuizData.close();
+
+        Country country = countryList.get(position % countryList.size());
+
+
+        questionTextView.setText("Which continent is " + country.getCountryName() + " in?");
+
+
     }
 
-    private void saveAnswerToActivity(String answer) {
-        // Use a ViewModel or an Interface to save the answer
-        // back to the parent Activity/Fragment so it persists
-        // when the user finishes the quiz.
-    }
 }
+
+

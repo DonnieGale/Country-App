@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
@@ -18,14 +20,11 @@ import android.view.ViewGroup;
  */
 public class QuizSwipe extends Fragment {
 
-
     private ViewPager2 viewPager;
 
     public QuizSwipe() {
         // Required empty public constructor
     }
-
-
 
     public static QuizSwipe newInstance() {
         QuizSwipe fragment = new QuizSwipe();
@@ -43,29 +42,28 @@ public class QuizSwipe extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewPager = view.findViewById(R.id.ViewPager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
 
-        QuizPagerAdapter adapter = new QuizPagerAdapter(this);
-        viewPager.setAdapter(adapter);
+        viewPager = view.findViewById(R.id.ViewPager);
+        viewPager.setAdapter(viewPagerAdapter);
+
     }
 
-        // Adapter class to manage the fragments for each swipe position
-        private static class QuizPagerAdapter extends FragmentStateAdapter {
-            public QuizPagerAdapter(@NonNull Fragment fragment) {
-                super(fragment);
-            }
-
-            @NonNull
-            @Override
-            public Fragment createFragment(int position) {
-                // Create a new instance of the fragment and pass the question index
-                return quizFragment.newInstance(position);
-            }
-
-            @Override
-            public int getItemCount() {
-                return 6; // Total number of quiz questions
-            }
+    public class ViewPagerAdapter extends FragmentStateAdapter {
+        public ViewPagerAdapter(@NonNull Fragment fragment) {
+            super(fragment);
         }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return quizFragment.newInstance(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return 3;
+        }
+    }
 
 }

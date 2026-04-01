@@ -1,5 +1,7 @@
 package edu.uga.cs.countryquiz;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -8,10 +10,8 @@ import java.util.List;
 public class Question {
 
     private String countryName;
-
     private String correctCapital;
     private String correctContinent;
-
     private List<String> wrongCapitals;
     private List<String> wrongContinents;
 
@@ -53,6 +53,20 @@ public class Question {
         return wrongContinents;
     }
 
+    /**
+     * Returns a shuffled list of all continent options (1 correct, 2 wrong).
+     */
+    public List<String> getContinentOptions() {
+        List<String> options = new ArrayList<>();
+        options.add(correctContinent);
+        if (wrongContinents != null) {
+            options.addAll(wrongContinents);
+        }
+        Collections.shuffle(options);
+        return options;
+    }
+
+    @Override
     public String toString() {
         return "Question: " + countryName;
     }
