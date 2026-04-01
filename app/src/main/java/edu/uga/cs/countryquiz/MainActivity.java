@@ -12,6 +12,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -26,8 +28,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         new CountryDBInitializer().execute();
-        // CountryQuizData data = new CountryQuizData(this);
-        // data.open();
+
+        CountryQuizData data = new CountryQuizData(this);
+        data.open();
 
         Fragment splash = new SplashFragment();
         FragmentManager manager = getSupportFragmentManager();
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    // Initializes the database and initializes the needed app data from the database
     private class CountryDBInitializer extends AsyncTask<Void, Void> {
 
         private CountryQuizData data;
@@ -47,13 +50,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
 
+            // Open the database
             data.open();
 
-            // Check if countries table is empty
+            // Check if database has been populated. If not, populate database from CSV file
             if (data.retrieveAllCountries().isEmpty()) {
                 data.loadCountriesFromCSV(MainActivity.this);
             }
 
+            // Retrieve all countries from the database and store them in memory for later access
+            List<Country> countries = data.retrieveAllCountries();
+            CountryRepository.getInstance().setCountries(countries);
+
+            // Close the database
             data.close();
 
             return null;

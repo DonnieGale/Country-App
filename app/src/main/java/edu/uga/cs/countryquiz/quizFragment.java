@@ -67,13 +67,22 @@ public class quizFragment extends Fragment {
         RadioButton rb2 = v.findViewById(R.id.radioButton3);
         RadioButton rb3 = v.findViewById(R.id.radioButton4);
 
-        CountryQuizData countryQuizData = new CountryQuizData(getContext());
-        countryQuizData.open();
+
+
+        // ---- PREVIOUS METHOD TO RETRIEVE COUNTRY LIST ---- v
+        // CountryQuizData countryQuizData = new CountryQuizData(getContext());
+        // countryQuizData.open();
 
         // Pass the helper to the ViewModel to get your 6 random countries
-        List<Country> CountryList = viewModel.getCountries(countryQuizData);
+        // List<Country> CountryList = viewModel.getCountries(countryQuizData);
 
-        countryQuizData.close();
+        // countryQuizData.close();
+        // ---- PREVIOUS METHOD TO RETRIEVE COUNTRY LIST ---- ^
+
+
+
+        // Get a list of 6 random countries from the CountryRepository instance
+        List<Country> CountryList = viewModel.getCountries(); // NEW METHOD TO RETRIEVE COUNTRY LIST
         
         if (CountryList == null || CountryList.isEmpty() || position >= CountryList.size()) {
             Log.e(TAG, "Country list is empty or position out of bounds");

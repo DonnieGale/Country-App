@@ -40,14 +40,16 @@ public class QuizViewModel extends androidx.lifecycle.ViewModel {
         return score;
     }
 
-    public List<Country> getCountries(CountryQuizData countryQuizData) {
+    // getCountries(CountryQuizData countryQuizData) // PREVIOUS METHOD SIGNATURE
+    public List<Country> getCountries() {
         if (quizCountries != null) {
             return quizCountries;
         }
 
         quizIndices = new ArrayList<>();
         List<Country> countries = new ArrayList<>();
-        List<Country> allCountries = countryQuizData.retrieveAllCountries();
+        // List<Country> allCountries = countryQuizData.retrieveAllCountries(); // PREVIOUS METHOD TO GET ALL COUNTRIES
+        List<Country> allCountries = CountryRepository.getInstance().getAllCountries(); // NEW METHOD TO GET ALL COUNTRIES
         int totalCountries = allCountries.size();
 
 
