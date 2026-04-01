@@ -57,12 +57,13 @@ public class QuizSwipe extends Fragment {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            return quizFragment.newInstance(position);
+            if(position < 6) {return quizFragment.newInstance(position);}
+            else {return new ResultFragment();}
         }
 
         @Override
         public int getItemCount() {
-            return 6;
+            return 7;
         }
     }
 
