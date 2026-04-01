@@ -76,6 +76,7 @@ public class quizFragment extends Fragment {
             questionTextView.setText("Which continent is " + country.getCountryName() + " in?");
 
             String correct = country.getContinentName();
+            viewModel.setCorrectAnswer(position, correct);
 
             rb1.setText(correct);
             rb2.setText("Europe");

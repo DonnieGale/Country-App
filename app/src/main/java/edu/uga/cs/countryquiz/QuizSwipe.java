@@ -22,6 +22,7 @@ public class QuizSwipe extends Fragment {
 
     private ViewPager2 viewPager;
 
+
     public QuizSwipe() {
         // Required empty public constructor
     }
@@ -58,7 +59,7 @@ public class QuizSwipe extends Fragment {
         @Override
         public Fragment createFragment(int position) {
             if(position < 6) {return quizFragment.newInstance(position);}
-            else {return new ResultFragment();}
+            else {return ResultFragment.newInstance();}
         }
 
         @Override
