@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,7 +27,6 @@ import java.util.List;
 public class quizFragment extends Fragment {
 
     private static final String TAG = "quizFragment";
-    private List<Country> countryList;
 
 
     public quizFragment() {
@@ -69,43 +69,58 @@ public class quizFragment extends Fragment {
 
         CountryQuizData countryQuizData = new CountryQuizData(getContext());
         countryQuizData.open();
-        countryList = countryQuizData.retrieveAllCountries();
 
-        if (countryList != null && !countryList.isEmpty()) {
-            Country country = countryList.get(position % countryList.size());
-            questionTextView.setText("Which continent is " + country.getCountryName() + " in?");
+        // Pass the helper to the ViewModel to get your 6 random countries
+        List<Country> CountryList = viewModel.getCountries(countryQuizData);
 
-            String correct = country.getContinentName();
-            viewModel.setCorrectAnswer(position, correct);
-
-            rb1.setText(correct);
-            rb2.setText("Europe");
-            rb3.setText("Asia");
-
-            //RESTORE SAVED ANSWER (If user swipes back)
-            String savedAnswer = viewModel.getAnswer(position);
-            if (savedAnswer != null) {
-                if (rb1.getText().equals(savedAnswer)) rb1.setChecked(true);
-                else if (rb2.getText().equals(savedAnswer)) rb2.setChecked(true);
-                else if (rb3.getText().equals(savedAnswer)) rb3.setChecked(true);
-            }
-
-            //SAVE ANSWER ON CLICK
-            radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-                RadioButton selected = v.findViewById(checkedId);
-                if (selected != null) {
-                    viewModel.setAnswer(position, selected.getText().toString());
-                    Log.d(TAG, "Saved answer for position " + position + ": " + selected.getText());
-                }
-            });
+        countryQuizData.close();
+        
+        if (CountryList == null || CountryList.isEmpty() || position >= CountryList.size()) {
+            Log.e(TAG, "Country list is empty or position out of bounds");
+            return;
         }
 
+        Country country = CountryList.get(position);
 
+        questionTextView.setText("What is the capital of the country " + country.getCountryName() + " ?");
 
+        String correct = country.getCapitalName();
+        viewModel.setCorrectAnswer(position, correct);
+        String incorrect1 = CountryList.get(5+position).getCapitalName();
+        String incorrect2 = CountryList.get(11+position).getCapitalName();
+        int randomQuestion = java.util.concurrent.ThreadLocalRandom.current().nextInt(3);
 
+        if (randomQuestion == 0) {
+        rb1.setText(correct);
+        rb2.setText(incorrect1);
+        rb3.setText(incorrect2);
+        }
+        else if (randomQuestion == 1) {
+            rb1.setText(incorrect1);
+            rb2.setText(correct);
+            rb3.setText(incorrect2);
+        } else if (randomQuestion == 2) {
+            rb1.setText(incorrect1);
+            rb2.setText(incorrect2);
+            rb3.setText(correct);
+        }
+
+        //RESTORE SAVED ANSWER (If user swipes back)
+        String savedAnswer = viewModel.getAnswer(position);
+        if (savedAnswer != null) {
+            if (rb1.getText().equals(savedAnswer)) rb1.setChecked(true);
+            else if (rb2.getText().equals(savedAnswer)) rb2.setChecked(true);
+            else if (rb3.getText().equals(savedAnswer)) rb3.setChecked(true);
+        }
+        //SAVE ANSWER ON CLICK
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton selected = v.findViewById(checkedId);
+            if (selected != null) {
+                viewModel.setAnswer(position, selected.getText().toString());
+                Log.d(TAG, "Saved answer for position " + position + ": " + selected.getText());
+            }
+        });
 
     }
 
 }
-
-
