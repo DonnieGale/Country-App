@@ -10,6 +10,11 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.opencsv.CSVReader;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 public class CountryQuizData {
 
     public static final String DEBUG_TAG = "CountryQuizData";
@@ -185,5 +190,46 @@ public class CountryQuizData {
         }
 
         return quizzes;
+    }
+
+
+
+
+
+    public void loadCountriesFromCSV(Context context) {
+
+        try {
+            InputStream is = context.getAssets().open("countries_data.csv");
+            CSVReader reader = new CSVReader(new InputStreamReader(is));
+
+            String[] NextRow;
+
+
+            while ((NextRow = reader.readNext()) != null) {
+
+                // CSV format:
+                // country, capital, continent, abbreviation
+
+                String countryName = NextRow[0];
+                String capitalName = NextRow[1];
+                String continentName = NextRow[2];
+                String abbreviation = NextRow[3];
+
+                ContentValues values = new ContentValues();
+                values.put(DBHelper.COUNTRIES_COLUMN_COUNTRYNAME, countryName);
+                values.put(DBHelper.COUNTRIES_COLUMN_CAPITALNAME, capitalName);
+                values.put(DBHelper.COUNTRIES_COLUMN_CONTINENTNAME, continentName);
+                values.put(DBHelper.COUNTRIES_COLUMN_ABBREVIATION, abbreviation);
+
+                db.insert(DBHelper.TABLE_COUNTRIES, null, values);
+            }
+
+            reader.close();
+
+            Log.d(DEBUG_TAG, "Countries loaded from assets CSV");
+
+        } catch (Exception e) {
+            Log.e(DEBUG_TAG, "Error loading CSV from assets", e);
+        }
     }
 }

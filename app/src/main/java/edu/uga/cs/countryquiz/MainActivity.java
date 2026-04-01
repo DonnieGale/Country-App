@@ -1,6 +1,7 @@
 package edu.uga.cs.countryquiz;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
@@ -24,12 +25,46 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        new CountryDBInitializer().execute();
+        // CountryQuizData data = new CountryQuizData(this);
+        // data.open();
+
         Fragment splash = new SplashFragment();
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragmentContainerView2, splash).commit();
     }
 
 
+
+    private class CountryDBInitializer extends AsyncTask<Void, Void> {
+
+        private CountryQuizData data;
+
+        public CountryDBInitializer() {
+            data = new CountryQuizData(MainActivity.this);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            data.open();
+
+            // Check if countries table is empty
+            if (data.retrieveAllCountries().isEmpty()) {
+                data.loadCountriesFromCSV(MainActivity.this);
+            }
+
+            data.close();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            // Optional: log or notify
+            Log.d("MainActivity", "Country DB initialization complete");
+        }
+    }
 
 
 

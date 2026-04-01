@@ -6,9 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +20,12 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class PreviousQuizFragment extends Fragment {
+
+    private static final String TAG = "PreviousQuizFragment";
+
+    private CountryQuizData countryQuizData = null;
+    private List<Quiz> quizList;
+
 
     public PreviousQuizFragment() {
         // Required empty public constructor
@@ -39,8 +49,69 @@ public class PreviousQuizFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
         super.onViewCreated( view, savedInstanceState );
 
+        // Initialize list
+        quizList = new ArrayList<>();
 
+        // Initialize DB
+        countryQuizData = new CountryQuizData(getActivity());
+        countryQuizData.open();
+
+        // Execute DB read in background
+        new QuizDBReader().execute();
 
 
     }
+
+
+
+    /**
+     * AsyncTask to read quizzes from DB
+     */
+    private class QuizDBReader extends AsyncTask<Void, List<Quiz>> {
+
+        @Override
+        protected List<Quiz> doInBackground(Void... voids) {
+
+            List<Quiz> quizzes = countryQuizData.retrieveAllQuizzes();
+
+            Log.d(TAG, "QuizDBReader: quizzes retrieved: " + quizzes.size());
+
+            return quizzes;
+        }
+
+        @Override
+        protected void onPostExecute(List<Quiz> quizzes) {
+
+            Log.d(TAG, "QuizDBReader: quizzes size: " + quizzes.size());
+
+            quizList.addAll(quizzes);
+
+            // LATER: maybe for recyclerview
+            for (Quiz q : quizList) {
+                Log.d(TAG, "Quiz: " + q.toString());
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (countryQuizData != null && !countryQuizData.isDBOpen()) {
+            countryQuizData.open();
+            Log.d(TAG, "onResume: opening DB");
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (countryQuizData != null) {
+            countryQuizData.close();
+            Log.d(TAG, "onPause: closing DB");
+        }
+    }
+
+
 }
