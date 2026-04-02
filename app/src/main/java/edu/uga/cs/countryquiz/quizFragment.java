@@ -126,9 +126,11 @@ public class quizFragment extends Fragment {
         //SAVE ANSWER ON CLICK
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton selected = v.findViewById(checkedId);
+            String fullText = selected.getText().toString();
+            String answer = fullText.split(": ")[1];
             if (selected != null) {
-                viewModel.setAnswer(position, selected.getText().toString());
-                Log.d(TAG, "Saved answer for position " + position + ": " + selected.getText());
+                viewModel.setAnswer(position, answer);
+                Log.d(TAG, "Saved answer for position " + position + ": " + answer);
             }
         });
 
