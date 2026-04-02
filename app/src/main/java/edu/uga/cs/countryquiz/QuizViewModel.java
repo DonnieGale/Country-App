@@ -25,19 +25,19 @@ public class QuizViewModel extends androidx.lifecycle.ViewModel {
         return answers[index];
     }
 
-    public double getScore() {
+    public int getScore() {
 
-        double correct = 0;
+        int correct = 0;
         for (int i = 0; i < answers.length; i++) {
             if (answers[i] != null && answers[i].equals(correctAnswers[i])) {
                 correct++;
             }
 
         }
-        double score = Math.round((correct / 6.0 * 100) * 100)/100.0;
-        Log.d("QuizViewModel", "Score: " + score + " Correct: " + correct);
+        double scorePercentage = Math.round((correct / 6.0 * 100) * 100)/100.0;
+        Log.d("QuizViewModel", "Score: " + scorePercentage + " Correct: " + correct);
 
-        return score;
+        return correct;
     }
 
     // getCountries(CountryQuizData countryQuizData) // PREVIOUS METHOD SIGNATURE

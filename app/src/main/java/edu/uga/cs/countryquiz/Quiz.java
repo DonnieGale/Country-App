@@ -54,6 +54,8 @@ public class Quiz {
         return quizDate;
     }
 
+    public void setQuizDate(String quizDate) { this.quizDate = quizDate; }
+
     public int getQuizResult() {
         return quizResult;
     }

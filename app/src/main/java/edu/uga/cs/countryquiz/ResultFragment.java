@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Date;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ResultFragment#newInstance} factory method to
@@ -19,6 +21,9 @@ import android.widget.TextView;
  */
 public class ResultFragment extends Fragment {
 
+    private static final String TAG = "ResultFragment";
+
+    private CountryQuizData countryQuizData = null;
 
     public ResultFragment() {
         // Required empty public constructor
@@ -32,6 +37,8 @@ public class ResultFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        countryQuizData = new CountryQuizData(getActivity());
     }
 
     @Override
@@ -45,10 +52,55 @@ public class ResultFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
         super.onViewCreated(view, savedInstanceState);
         QuizViewModel QuizViewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
-        double scoreVal = QuizViewModel.getScore();
-        Log.d("ResultFragment", "Score:" + scoreVal);
+        int numOfCorrect = QuizViewModel.getScore();
+        double scorePercentage = Math.round((numOfCorrect / 6.0 * 100) * 100)/100.0;
+        Log.d("ResultFragment", "Score: " + scorePercentage + "Correct: " + numOfCorrect);
 
         TextView score = view.findViewById(R.id.score);
-        score.setText(String.valueOf(scoreVal));
+        String resultTextDisplay = String.valueOf(scorePercentage) + "%   " + "(" + String.valueOf(numOfCorrect) + "/" + 6 + " correct)";
+        score.setText(resultTextDisplay);
+
+        // Add new quiz to the database
+        Quiz quiz = new Quiz();
+        quiz.setQuizDate(new Date().toString());   // store as String
+        quiz.setQuizResult(numOfCorrect);
+
+        new QuizDBWriter().execute(quiz);
     }
+
+
+
+
+    /**
+     * AsyncTask to write quiz to DB
+     */
+    private class QuizDBWriter extends AsyncTask<Quiz, Quiz> {
+
+        @Override
+        protected Quiz doInBackground(Quiz... quizzes) {
+
+            countryQuizData.open();
+
+            countryQuizData.storeQuiz(quizzes[0]);
+
+            // DEBUG: inspect the database in under 60 seconds
+           // try {
+            //    Thread.sleep(60000);
+           // } catch (InterruptedException e) {
+            //    e.printStackTrace();
+           // }
+
+            countryQuizData.close();
+
+            return quizzes[0];
+        }
+
+        @Override
+        protected void onPostExecute(Quiz quiz) {
+
+            Log.d(TAG, "Quiz saved: " + quiz.toString());
+        }
+    }
+
+
 }
