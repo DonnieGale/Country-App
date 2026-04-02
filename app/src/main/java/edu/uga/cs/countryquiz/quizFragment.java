@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -58,6 +59,7 @@ public class quizFragment extends Fragment {
         super.onViewCreated(v, savedInstanceState);
 
         int position = getArguments() != null ? getArguments().getInt("position") : 0;
+
 
         QuizViewModel viewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
 

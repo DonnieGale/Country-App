@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -59,12 +60,40 @@ public class QuizSwipe extends Fragment {
         @Override
         public Fragment createFragment(int position) {
             if(position < 6) {return quizFragment.newInstance(position);}
-            else {return ResultFragment.newInstance();}
+            else {
+                return ResultFragment.newInstance();
+            }
         }
 
         @Override
         public int getItemCount() {
             return 7;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            QuizViewModel viewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
+            return (long) viewModel.getQuizSessionId() * 7 + position;
+        }
+
+        @Override
+        public boolean containsItem(long itemId) {
+            return super.containsItem(itemId);
+        }
+    }
+
+    public void restart() {
+
+        QuizViewModel viewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
+        viewModel.resetQuiz();
+        viewModel.getCountries();
+
+
+        if (viewPager != null) {
+            viewPager.setCurrentItem(0,false);
+            if (viewPager.getAdapter() != null) {
+                viewPager.getAdapter().notifyDataSetChanged();
+            }
         }
     }
 

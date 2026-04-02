@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class QuizViewModel extends androidx.lifecycle.ViewModel {
     // Array to store 6 answers (indices 0-5)
@@ -13,34 +12,55 @@ public class QuizViewModel extends androidx.lifecycle.ViewModel {
     private List<Integer> quizIndices = new ArrayList<>();
     private List<Country> quizCountries = null;
 
+    private int quizSessionId = 0;
+
+    public void resetQuiz() {
+        quizSessionId++;
+
+        for (int i = 0; i < answers.length; i++) {
+            answers[i] = null;
+            correctAnswers[i] = null;
+        }
+        if (quizIndices != null) {
+            quizIndices.clear();
+        }
+        quizCountries = null;
+        Log.d("QuizViewModel", "Quiz reset, session ID: " + quizSessionId);
+    }
+
+    public int getQuizSessionId() {
+        return quizSessionId;
+    }
+    
     public void setAnswer(int index, String answer) {
-        answers[index] = answer;
+        if (index >= 0 && index < answers.length) {
+            answers[index] = answer;
+        }
     }
 
     public void setCorrectAnswer(int index, String answer) {
-        correctAnswers[index] = answer;
+        if (index >= 0 && index < correctAnswers.length) {
+            correctAnswers[index] = answer;
+        }
     }
 
     public String getAnswer(int index) {
-        return answers[index];
+        if (index >= 0 && index < answers.length) {
+            return answers[index];
+        }
+        return null;
     }
 
     public int getScore() {
-
         int correct = 0;
         for (int i = 0; i < answers.length; i++) {
             if (answers[i] != null && answers[i].equals(correctAnswers[i])) {
                 correct++;
             }
-
         }
-        double scorePercentage = Math.round((correct / 6.0 * 100) * 100)/100.0;
-        Log.d("QuizViewModel", "Score: " + scorePercentage + " Correct: " + correct);
-
         return correct;
     }
 
-    // getCountries(CountryQuizData countryQuizData) // PREVIOUS METHOD SIGNATURE
     public List<Country> getCountries() {
         if (quizCountries != null) {
             return quizCountries;
@@ -48,12 +68,12 @@ public class QuizViewModel extends androidx.lifecycle.ViewModel {
 
         quizIndices = new ArrayList<>();
         List<Country> countries = new ArrayList<>();
-        // List<Country> allCountries = countryQuizData.retrieveAllCountries(); // PREVIOUS METHOD TO GET ALL COUNTRIES
-        List<Country> allCountries = CountryRepository.getInstance().getAllCountries(); // NEW METHOD TO GET ALL COUNTRIES
+        List<Country> allCountries = CountryRepository.getInstance().getAllCountries();
         int totalCountries = allCountries.size();
 
+        if (totalCountries == 0) return countries;
 
-        while (quizIndices.size() < 18) {
+        while (quizIndices.size() < 18 && quizIndices.size() < totalCountries) {
             // Generate random index
             int randomIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(totalCountries);
 
