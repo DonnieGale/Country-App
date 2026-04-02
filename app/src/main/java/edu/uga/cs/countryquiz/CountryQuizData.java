@@ -149,7 +149,7 @@ public class CountryQuizData {
             cursor = db.query(DBHelper.TABLE_QUIZZES,
                     quizColumns,
                     null, null, null, null,
-                    DBHelper.QUIZZES_COLUMN_QUIZDATE + " DESC");
+                    DBHelper.QUIZZES_COLUMN_QUIZID + " DESC");
 
             if (cursor != null && cursor.getCount() > 0) {
 
