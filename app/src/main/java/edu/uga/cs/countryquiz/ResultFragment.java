@@ -51,6 +51,9 @@ public class ResultFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
         super.onViewCreated(view, savedInstanceState);
+
+
+        // Do we need to calculate the score here or in the model?
         QuizViewModel QuizViewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
         int numOfCorrect = QuizViewModel.getScore();
         double scorePercentage = Math.round((numOfCorrect / 6.0 * 100) * 100)/100.0;

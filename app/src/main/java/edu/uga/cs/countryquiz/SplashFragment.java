@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +21,8 @@ public class SplashFragment extends Fragment {
 
     Button start;
     Button previous;
+
+    TextView textView;
 
     public SplashFragment() {
         // Required empty public constructor
@@ -43,6 +46,13 @@ public class SplashFragment extends Fragment {
 
         start = view.findViewById( R.id.button );
         previous = view.findViewById( R.id.button2 );
+        textView = view.findViewById( R.id.textView );
+
+        textView.setText("Test your knowledge of world geography! You'll be given 6 countries and must identify the correct capital city from 3 choices.\n" +
+                "How to play:\n" +
+                "Swipe left to move between questions. Select your answer before swiping. Your final score will be shown after the last question.");
+
+
 
 
         start.setOnClickListener( v -> {

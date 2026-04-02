@@ -4,7 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ public class PreviousQuizFragment extends Fragment {
 
     private CountryQuizData countryQuizData = null;
     private List<Quiz> quizList;
+    private QuizRecyclerAdapter adapter;
+    private RecyclerView recyclerView;
 
 
     public PreviousQuizFragment() {
@@ -47,10 +50,15 @@ public class PreviousQuizFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
-        super.onViewCreated( view, savedInstanceState );
+        super.onViewCreated(view, savedInstanceState);
 
         // Initialize list
         quizList = new ArrayList<>();
+
+        recyclerView = view.findViewById(R.id.Recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new QuizRecyclerAdapter(quizList);
+        recyclerView.setAdapter(adapter);
 
         // Initialize DB
         countryQuizData = new CountryQuizData(getActivity());
@@ -58,10 +66,7 @@ public class PreviousQuizFragment extends Fragment {
 
         // Execute DB read in background
         new QuizDBReader().execute();
-
-
     }
-
 
 
     /**
@@ -84,7 +89,9 @@ public class PreviousQuizFragment extends Fragment {
 
             Log.d(TAG, "QuizDBReader: quizzes size: " + quizzes.size());
 
+            quizList.clear();
             quizList.addAll(quizzes);
+            adapter.notifyDataSetChanged();
 
             // LATER: maybe for recyclerview
             for (Quiz q : quizList) {

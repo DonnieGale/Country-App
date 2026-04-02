@@ -15,7 +15,6 @@
         android:layout_marginTop="128dp"
         android:layout_marginEnd="168dp"
         android:layout_marginBottom="244dp"
-        android:text="Purpose of Quiz and explain basic rules.. maybe a help screen?"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
