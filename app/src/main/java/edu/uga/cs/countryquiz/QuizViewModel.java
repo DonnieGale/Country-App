@@ -31,7 +31,8 @@ public class QuizViewModel extends androidx.lifecycle.ViewModel {
     public int getQuizSessionId() {
         return quizSessionId;
     }
-    
+
+    //TODO: Update answer after each swipe?
     public void setAnswer(int index, String answer) {
         if (index >= 0 && index < answers.length) {
             answers[index] = answer;
@@ -53,9 +54,10 @@ public class QuizViewModel extends androidx.lifecycle.ViewModel {
 
     public int getScore() {
         int correct = 0;
-        for (int i = 0; i < answers.length; i++) {
+        for (int i = 0; i < 6; i++) {
             if (answers[i] != null && answers[i].equals(correctAnswers[i])) {
                 correct++;
+
             }
         }
         return correct;
@@ -77,7 +79,7 @@ public class QuizViewModel extends androidx.lifecycle.ViewModel {
             // Generate random index
             int randomIndex = java.util.concurrent.ThreadLocalRandom.current().nextInt(totalCountries);
 
-            // Check if the list already contains this number to ensure uniqueness
+            // Check if the list already contains this number
             if (!quizIndices.contains(randomIndex)) {
                 quizIndices.add(randomIndex);
                 
@@ -85,10 +87,10 @@ public class QuizViewModel extends androidx.lifecycle.ViewModel {
                 Country country = allCountries.get(randomIndex);
                 countries.add(country);
 
-                // Only set the correct answer for the first 6 countries (the questions)
-                if (quizIndices.size() <= 6) {
-                    setCorrectAnswer(quizIndices.size() - 1, country.getCapitalName());
-                }
+
+                Log.d("QuizViewModel", "Correct Answer for index " + quizIndices.size() + ": " + country.getCapitalName());
+                setCorrectAnswer(quizIndices.size() - 1, country.getCapitalName());
+
             }
         }
         quizCountries = countries;

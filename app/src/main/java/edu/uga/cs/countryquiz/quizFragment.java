@@ -93,7 +93,7 @@ public class quizFragment extends Fragment {
 
         Country country = CountryList.get(position);
 
-        questionTextView.setText("What is the capital of the country " + country.getCountryName() + " ?");
+        questionTextView.setText("What is the capital of the country " + country.getCountryName() + "?");
 
         String correct = country.getCapitalName();
         viewModel.setCorrectAnswer(position, correct);
@@ -102,18 +102,18 @@ public class quizFragment extends Fragment {
         int randomQuestion = java.util.concurrent.ThreadLocalRandom.current().nextInt(3);
 
         if (randomQuestion == 0) {
-        rb1.setText(correct);
-        rb2.setText(incorrect1);
-        rb3.setText(incorrect2);
+        rb1.setText("A: " + correct);
+        rb2.setText("B: " + incorrect1);
+        rb3.setText("C: " + incorrect2);
         }
         else if (randomQuestion == 1) {
-            rb1.setText(incorrect1);
-            rb2.setText(correct);
-            rb3.setText(incorrect2);
+            rb1.setText("A: " + incorrect1);
+            rb2.setText("B: " + correct);
+            rb3.setText("C: " + incorrect2);
         } else if (randomQuestion == 2) {
-            rb1.setText(incorrect1);
-            rb2.setText(incorrect2);
-            rb3.setText(correct);
+            rb1.setText("A: " + incorrect1);
+            rb2.setText("B: " + incorrect2);
+            rb3.setText("C: " + correct);
         }
 
         //RESTORE SAVED ANSWER (If user swipes back)
