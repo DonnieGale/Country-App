@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,15 @@ public class PreviousQuizFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new QuizRecyclerAdapter(quizList);
         recyclerView.setAdapter(adapter);
+
+        Button homeButton = view.findViewById(R.id.button7);
+
+        homeButton.setOnClickListener(v -> {
+            QuizViewModel viewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
+            viewModel.resetQuiz();
+            ((MainActivity) requireActivity()).showSplashScreen();
+        });
+
 
         // Initialize DB
         countryQuizData = new CountryQuizData(getActivity());
