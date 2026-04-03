@@ -1,8 +1,10 @@
 package edu.uga.cs.countryquiz;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -44,13 +46,16 @@ public class SplashFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
         super.onViewCreated( view, savedInstanceState );
 
+        ConstraintLayout layout = view.findViewById( R.id.frameLayout2 );
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            layout.setBackgroundResource(R.drawable.earthland);
+        } else {
+            layout.setBackgroundResource(R.drawable.earth);
+        }
         start = view.findViewById( R.id.button );
         previous = view.findViewById( R.id.button2 );
-        textView = view.findViewById( R.id.textView );
 
-        textView.setText("Test your knowledge of world geography! You'll be given 6 countries and must identify the correct capital city from 3 choices.\n" +
-                "How to play:\n" +
-                "Swipe left to move between questions. Select your answer before swiping. Your final score will be shown after the last question.");
 
 
 
