@@ -6,7 +6,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
@@ -17,9 +16,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -117,14 +114,14 @@ public class quizFragment extends Fragment {
             rb3.setText("C: " + correct);
         }
 
-        //RESTORE SAVED ANSWER (If user swipes back)
+        //restore saved answer
         String savedAnswer = viewModel.getAnswer(position);
         if (savedAnswer != null) {
             if (rb1.getText().equals(savedAnswer)) rb1.setChecked(true);
             else if (rb2.getText().equals(savedAnswer)) rb2.setChecked(true);
             else if (rb3.getText().equals(savedAnswer)) rb3.setChecked(true);
         }
-        //SAVE ANSWER ON CLICK
+        //save answer on click
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton selected = v.findViewById(checkedId);
             String fullText = selected.getText().toString();

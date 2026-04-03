@@ -14,14 +14,28 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * RecyclerView adapter for displaying a list of previous quiz results.
+ */
 public class QuizRecyclerAdapter extends RecyclerView.Adapter<QuizRecyclerAdapter.QuizViewHolder> {
 
     private List<Quiz> quizList;
 
+    /**
+     * Constructor for the QuizRecyclerAdapter.
+     * @param quizList The list of previously completed quizzes retrieved from the database.
+     */
     public QuizRecyclerAdapter(List<Quiz> quizList) {
         this.quizList = quizList;
     }
 
+    /**
+     * Called when RecyclerView needs a new ViewHolder.
+     *
+     * @param parent The ViewGroup where the new View will be added.
+     * @param viewType The view type of the new View.
+     * @return A new QuizViewHolder that holds the view for a single quiz item.
+     */
     @NonNull
     @Override
     public QuizViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -29,6 +43,12 @@ public class QuizRecyclerAdapter extends RecyclerView.Adapter<QuizRecyclerAdapte
         return new QuizViewHolder(view);
     }
 
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     *
+     * @param holder represents the contents of the item at the given position.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull QuizViewHolder holder, int position) {
         Quiz quiz = quizList.get(position);
@@ -36,19 +56,29 @@ public class QuizRecyclerAdapter extends RecyclerView.Adapter<QuizRecyclerAdapte
         String formattedDate = formatDate(quiz.getQuizDate());
         holder.quizDate.setText("Date: " + formattedDate);
 
-        // holder.quizDate.setText("Date: " + quiz.getQuizDate());
         holder.quizResult.setText("Score: " + quiz.getQuizResult() + "/6");
     }
 
+    /**
+     * Returns the total number of items in the data set.
+     * @return The size of the quiz list, or 0 if list is null.
+     */
     @Override
     public int getItemCount() {
         return quizList != null ? quizList.size() : 0;
     }
 
+    /**
+     * ViewHolder class holds references to the UI components of a single quiz item.
+     */
     public static class QuizViewHolder extends RecyclerView.ViewHolder {
         public TextView quizDate;
         public TextView quizResult;
 
+        /**
+         * Constructor for the ViewHolder.
+         * @param itemView The view of a single quiz item.
+         */
         public QuizViewHolder(View itemView) {
             super(itemView);
             quizDate = itemView.findViewById(R.id.quizDate);
@@ -57,16 +87,22 @@ public class QuizRecyclerAdapter extends RecyclerView.Adapter<QuizRecyclerAdapte
     }
 
 
+    /**
+     * Helper method to convert date.
+     *
+     * @param oldDateString The original date string.
+     * @return A formatted date string.
+     */
     public String formatDate(String oldDateString) {
 
         try {
-            // Step 1: parse original format
+            // parse original format
             SimpleDateFormat oldFormat =
                     new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 
             Date date = oldFormat.parse(oldDateString);
 
-            // Step 2: format to desired output
+            // format to output
             SimpleDateFormat newFormat =
                     new SimpleDateFormat("MMM dd, yyyy, hh:mm a", Locale.US);
 

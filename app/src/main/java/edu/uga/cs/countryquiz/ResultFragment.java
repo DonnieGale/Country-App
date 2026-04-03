@@ -18,9 +18,8 @@ import android.widget.TextView;
 import java.util.Date;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ResultFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment that displays the final result of a quiz session.
+ * It calculates the score, displays it to the user, and saves the quiz result to the database.
  */
 public class ResultFragment extends Fragment {
 
@@ -28,15 +27,25 @@ public class ResultFragment extends Fragment {
 
     private CountryQuizData countryQuizData = null;
 
-    public ResultFragment() {
-        // Required empty public constructor
-    }
+    /**
+     * Required empty public constructor.
+     */
+    public ResultFragment() {}
 
+    /**
+     * Static factory method to create a new instance of this fragment.
+     * @return A new instance of ResultFragment.
+     */
     public static ResultFragment newInstance() {
         ResultFragment fragment = new ResultFragment();
         return fragment;
     }
 
+    /**
+     * Called when the fragment is being created.
+     * Initializes database access.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +53,13 @@ public class ResultFragment extends Fragment {
         countryQuizData = new CountryQuizData(getActivity());
     }
 
+    /**
+     * Inflates the layout for this fragment.
+     * @param inflater The LayoutInflater object that can be used to inflate views.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,6 +67,13 @@ public class ResultFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_result, container, false);
     }
 
+    /**
+     * Called after the view has been created.
+     * Calculates the score from the ViewModel, updates the UI, and saves the result to the database.
+     *
+     * @param view The View returned by onCreateView.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
         super.onViewCreated(view, savedInstanceState);
@@ -110,18 +133,14 @@ public class ResultFragment extends Fragment {
 
             countryQuizData.open();
             countryQuizData.storeQuiz(quizzes[0]);
-
-            // DEBUG: inspect the database in under 60 seconds
-           // try {
-            //    Thread.sleep(60000);
-           // } catch (InterruptedException e) {
-            //    e.printStackTrace();
-           // }
-
             countryQuizData.close();
             return quizzes[0];
         }
 
+        /**
+         * Logs completion of the save operation.
+         * @param quiz The saved Quiz.
+         */
         @Override
         protected void onPostExecute(Quiz quiz) {
             Log.d(TAG, "Quiz saved: " + quiz.toString());

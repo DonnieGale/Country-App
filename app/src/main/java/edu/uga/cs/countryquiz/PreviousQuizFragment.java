@@ -19,30 +19,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link PreviousQuizFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A Fragment that displays a list of previously completed quizzes.
  */
 public class PreviousQuizFragment extends Fragment {
 
     private static final String TAG = "PreviousQuizFragment";
-
     private CountryQuizData countryQuizData = null;
     private List<Quiz> quizList;
     private QuizRecyclerAdapter adapter;
     private RecyclerView recyclerView;
 
+    /**
+     * Required empty public constructor.
+     */
+    public PreviousQuizFragment() {}
 
-    public PreviousQuizFragment() {
-        // Required empty public constructor
-    }
 
-
+    /**
+     * Static factory method to create a new instance of this fragment.
+     * @return A new instance of PreviousQuizFragment.
+     */
     public static PreviousQuizFragment newInstance() {
         PreviousQuizFragment fragment = new PreviousQuizFragment();
         return fragment;
     }
 
+    /**
+     * Inflates the layout for this fragment.
+     * @param inflater The LayoutInflater object that can be used to inflate views.
+     * @param container Parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,7 +58,13 @@ public class PreviousQuizFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_previous_quiz, container, false);
     }
 
-
+    /**
+     * Initializes the RecyclerView, database connection, and reads.
+     * Also handles the back button press to return to the splash screen.
+     *
+     * @param view The View returned by onCreateView.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState ) {
         super.onViewCreated(view, savedInstanceState);
@@ -70,12 +84,8 @@ public class PreviousQuizFragment extends Fragment {
             viewModel.resetQuiz();
             ((MainActivity) requireActivity()).showSplashScreen();
         });
-
-
         // Initialize DB
         countryQuizData = new CountryQuizData(getActivity());
-        // countryQuizData.open();
-
 
         // Execute DB read in background
         new QuizDBReader().execute();
@@ -99,6 +109,10 @@ public class PreviousQuizFragment extends Fragment {
      */
     private class QuizDBReader extends AsyncTask<Void, List<Quiz>> {
 
+        /**
+         * Retrieves all quizzes from the database.
+         * @return A list of Quiz objects.
+         */
         @Override
         protected List<Quiz> doInBackground(Void... voids) {
 
@@ -110,6 +124,10 @@ public class PreviousQuizFragment extends Fragment {
             return quizzes;
         }
 
+        /**
+         * Updates the UI with the retrieved list of quizzes.
+         * @param quizzes The list of quizzes retrieved from the database.
+         */
         @Override
         protected void onPostExecute(List<Quiz> quizzes) {
 
@@ -118,8 +136,6 @@ public class PreviousQuizFragment extends Fragment {
             quizList.clear();
             quizList.addAll(quizzes);
             adapter.notifyDataSetChanged();
-
-
 
             // Log quiz list
             for (Quiz q : quizList) {
@@ -131,25 +147,21 @@ public class PreviousQuizFragment extends Fragment {
         }
     }
 
+    /**
+     * Reopens the database when the fragment is resumed.
+     */
     @Override
     public void onResume() {
         super.onResume();
         Log.d(TAG, String.valueOf(countryQuizData != null));
-        //if (countryQuizData != null && !countryQuizData.isDBOpen()) {
-        //    countryQuizData.open();
-        //    Log.d(TAG, "onResume: opening DB");
-       // }
     }
 
+    /**
+     * Closes the database connection when the fragment is paused.
+     */
     @Override
     public void onPause() {
         super.onPause();
-        /*
-        if (countryQuizData != null) {
-            countryQuizData.close();
-            Log.d(TAG, "onPause: closing DB");
-        }
-        */
     }
 
 
