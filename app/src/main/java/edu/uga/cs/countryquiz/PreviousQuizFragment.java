@@ -2,8 +2,10 @@ package edu.uga.cs.countryquiz;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,6 +68,18 @@ public class PreviousQuizFragment extends Fragment {
 
         // Execute DB read in background
         new QuizDBReader().execute();
+
+        // Handle Back Button
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        Log.d(TAG, "Back Button Pressed");
+                        QuizViewModel viewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
+                        viewModel.resetQuiz();
+                        ((MainActivity) requireActivity()).showSplashScreen();
+                    }
+                });
     }
 
 

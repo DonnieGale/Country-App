@@ -75,6 +75,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void showSplashScreen(){
+
+        Fragment splash = new SplashFragment();
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.fragmentContainerView2, splash).commit();
+    }
+
 
 
 }
