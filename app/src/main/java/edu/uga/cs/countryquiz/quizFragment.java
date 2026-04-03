@@ -2,6 +2,7 @@ package edu.uga.cs.countryquiz;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -69,17 +70,17 @@ public class quizFragment extends Fragment {
         RadioButton rb2 = v.findViewById(R.id.radioButton3);
         RadioButton rb3 = v.findViewById(R.id.radioButton4);
 
-
-
-        // ---- PREVIOUS METHOD TO RETRIEVE COUNTRY LIST ---- v
-        // CountryQuizData countryQuizData = new CountryQuizData(getContext());
-        // countryQuizData.open();
-
-        // Pass the helper to the ViewModel to get your 6 random countries
-        // List<Country> CountryList = viewModel.getCountries(countryQuizData);
-
-        // countryQuizData.close();
-        // ---- PREVIOUS METHOD TO RETRIEVE COUNTRY LIST ---- ^
+        // Handle Back Button
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        Log.d(TAG, "Back Button Pressed");
+                        QuizViewModel viewModel = new ViewModelProvider(requireActivity()).get(QuizViewModel.class);
+                        viewModel.resetQuiz();
+                        ((MainActivity) requireActivity()).showSplashScreen();
+                    }
+                });
 
 
 
