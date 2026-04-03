@@ -34,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
         Fragment splash = new SplashFragment();
         FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.fragmentContainerView2, splash).commit();
+        if (savedInstanceState == null) {
+            manager.beginTransaction().replace(R.id.fragmentContainerView2, splash).commit();
+        }
     }
 
 
