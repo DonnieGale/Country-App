@@ -29,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
 
         new CountryDBInitializer().execute();
 
-        CountryQuizData data = new CountryQuizData(this);
-        data.open();
 
         Fragment splash = new SplashFragment();
         FragmentManager manager = getSupportFragmentManager();

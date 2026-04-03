@@ -22,14 +22,6 @@ public class CountryRepository {
         return instance;
     }
 
-    public void loadCountries(CountryQuizData data) {
-        if (allCountries.isEmpty()) {
-            data.open();
-            allCountries = data.retrieveAllCountries();  // read all countries once
-            data.close();
-        }
-    }
-
     public List<Country> getAllCountries() {
         return allCountries;
     }

@@ -95,7 +95,9 @@ public class ResultFragment extends Fragment {
         quiz.setQuizDate(new Date().toString());   // store as String
         quiz.setQuizResult(numOfCorrect);
 
+
         new QuizDBWriter().execute(quiz);
+
     }
 
     /**

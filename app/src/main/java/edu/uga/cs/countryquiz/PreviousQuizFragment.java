@@ -64,7 +64,8 @@ public class PreviousQuizFragment extends Fragment {
 
         // Initialize DB
         countryQuizData = new CountryQuizData(getActivity());
-        countryQuizData.open();
+        // countryQuizData.open();
+
 
         // Execute DB read in background
         new QuizDBReader().execute();
@@ -91,6 +92,7 @@ public class PreviousQuizFragment extends Fragment {
         @Override
         protected List<Quiz> doInBackground(Void... voids) {
 
+            countryQuizData.open();
             List<Quiz> quizzes = countryQuizData.retrieveAllQuizzes();
 
             Log.d(TAG, "QuizDBReader: quizzes retrieved: " + quizzes.size());
@@ -107,31 +109,37 @@ public class PreviousQuizFragment extends Fragment {
             quizList.addAll(quizzes);
             adapter.notifyDataSetChanged();
 
-            // LATER: maybe for recyclerview
+
+
+            // Log quiz list
             for (Quiz q : quizList) {
                 Log.d(TAG, "Quiz: " + q.toString());
             }
+
+            countryQuizData.close();
+
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if (countryQuizData != null && !countryQuizData.isDBOpen()) {
-            countryQuizData.open();
-            Log.d(TAG, "onResume: opening DB");
-        }
+        Log.d(TAG, String.valueOf(countryQuizData != null));
+        //if (countryQuizData != null && !countryQuizData.isDBOpen()) {
+        //    countryQuizData.open();
+        //    Log.d(TAG, "onResume: opening DB");
+       // }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
+        /*
         if (countryQuizData != null) {
             countryQuizData.close();
             Log.d(TAG, "onPause: closing DB");
         }
+        */
     }
 
 
