@@ -69,7 +69,7 @@ public class QuizRecyclerAdapter extends RecyclerView.Adapter<QuizRecyclerAdapte
     }
 
     /**
-     * ViewHolder class holds references to the UI components of a single quiz item.
+     * ViewHolder class holds references to the UI components.
      */
     public static class QuizViewHolder extends RecyclerView.ViewHolder {
         public TextView quizDate;

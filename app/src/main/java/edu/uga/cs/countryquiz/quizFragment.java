@@ -19,9 +19,9 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link quizFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A Fragment representing a single question in the country quiz.
+ * Each instance displays a country name and three capital city options.
+ * It manages user selection.
  */
 public class quizFragment extends Fragment {
 
@@ -32,6 +32,12 @@ public class quizFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Static factory method to create a new instance of this fragment.
+     *
+     * @param position The index of the question in the quiz.
+     * @return A new instance of quizFragment.
+     */
     public static quizFragment newInstance(int position) {
         quizFragment fragment = new quizFragment();
         Bundle args = new Bundle();
@@ -45,6 +51,14 @@ public class quizFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Inflates the layout for this fragment.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate views.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     * @return The View for the fragment's UI.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,6 +66,13 @@ public class quizFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_quiz2, container, false);
     }
 
+    /**
+     * Sets up the question text, randomly assigns
+     * capital city options to radio buttons, restores saved state, and handles user input.
+     *
+     * @param v The View returned by onCreateView.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state.
+     */
     @Override
     public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
@@ -82,7 +103,7 @@ public class quizFragment extends Fragment {
 
 
         // Get a list of 6 random countries from the CountryRepository instance
-        List<Country> CountryList = viewModel.getCountries(); // NEW METHOD TO RETRIEVE COUNTRY LIST
+        List<Country> CountryList = viewModel.getCountries();
         
         if (CountryList == null || CountryList.isEmpty() || position >= CountryList.size()) {
             Log.e(TAG, "Country list is empty or position out of bounds");
